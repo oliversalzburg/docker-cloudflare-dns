@@ -1,5 +1,13 @@
 import http from "node:http";
 
+const CLOUDFLARE_API_ENDPOINT = "https://api.cloudflare.com/client/v4";
+// API key should be created with Edit permissions to target zone(s).
+const CLOUDFLARE_API_KEY = process.env.CLOUDFLARE_API_KEY;
+
+if (!CLOUDFLARE_API_KEY) {
+  throw new Error("CLOUDFLARE_API_KEY is not set. Exiting.");
+}
+
 declare global {
   export const fetch: (
     url: string,
@@ -93,10 +101,6 @@ const getContainerIpAddress = (container: ContainerMetadata) => {
     v6: network.GlobalIPv6Address,
   };
 };
-
-const CLOUDFLARE_API_ENDPOINT = "https://api.cloudflare.com/client/v4";
-// API key should be created with Edit permissions to target zone(s).
-const CLOUDFLARE_API_KEY = process.env.CLOUDFLARE_API_KEY ?? "missing API key";
 
 let zonesCache: Array<ZoneInfo> | undefined;
 const getZones = async () => {
