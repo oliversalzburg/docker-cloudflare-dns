@@ -12,7 +12,10 @@
       "program": "${workspaceFolder}/source/main.ts",
       "outFiles": ["${workspaceFolder}/output/*.cjs"],
       "preLaunchTask": "build",
-      "cwd": "${workspaceFolder}"
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "CLOUDFLARE_API_KEY": "<your API key here>"
+      }
     }
   ]
 }
