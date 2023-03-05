@@ -33,6 +33,6 @@ docker run --rm --name traefik \
     --volume /var/run/docker.sock:/var/run/docker.sock:ro \
     --label "cloudflare.enabled=true" \
     --label "cloudflare.name=ingress" \
-    --label "cloudflare.zone=yourawesomedomain.com" \
+    --label "cloudflare.zone=example.com" \
     traefik:latest
 ```
