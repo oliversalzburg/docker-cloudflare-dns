@@ -1699,13 +1699,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier-plugin-organize-imports@npm:2.3.4":
-  version: 2.3.4
-  resolution: "prettier-plugin-organize-imports@npm:2.3.4"
+"prettier-plugin-organize-imports@npm:3.2.2":
+  version: 3.2.2
+  resolution: "prettier-plugin-organize-imports@npm:3.2.2"
   peerDependencies:
+    "@volar/vue-language-plugin-pug": ^1.0.4
+    "@volar/vue-typescript": ^1.0.4
     prettier: ">=2.0"
     typescript: ">=2.9"
-  checksum: f558385fe4dc871bde096efd69d1e952540f5ae5070b4163c4a398a4f8a09ea64a5b5dfa55ca7fbaa34d9039e4de2bc56c7ee9d5cbd96992301dc496550f4b0b
+  peerDependenciesMeta:
+    "@volar/vue-language-plugin-pug":
+      optional: true
+    "@volar/vue-typescript":
+      optional: true
+  checksum: b49433485059ae9df77d8d89fdb5ef7b4e270329fd3792f9962a552efe86a76d6ab49d9a33860bc250d6707265643d59060add5b2389aa668013bad613601dda
   languageName: node
   linkType: hard
 
@@ -2160,7 +2167,7 @@ __metadata:
     lint-staged: 12.3.7
     prettier: 2.8.4
     prettier-package-json: 2.8.0
-    prettier-plugin-organize-imports: 2.3.4
+    prettier-plugin-organize-imports: 3.2.2
     typescript: 4.9.5
   languageName: unknown
   linkType: soft
