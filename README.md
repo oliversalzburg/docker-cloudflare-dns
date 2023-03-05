@@ -19,10 +19,8 @@ Output will guide you from there, if anything is wrong.
 
 Behavior is controlled through container labels:
 
-| Label                      | Description                                                     |
-| -------------------------- | --------------------------------------------------------------- |
-| **`'cloudflare.enabled'`** | Set to `'true'` to include this container in DNS updates.       |
-| **`'cloudflare.zone'`**    | Specifies the zone in your CloudFlare account to update.        |
-| `'cloudflare.name'`        | Override the record name. Default is the name of the container. |
-
-Items in **bold** are required to be provided.
+| Label                  | Required | Description                                                     |
+| ---------------------- | -------- | --------------------------------------------------------------- |
+| `'cloudflare.enabled'` | yes      | Set to `'true'` to include this container in DNS updates.       |
+| `'cloudflare.zone'`    | yes      | Specifies the zone in your CloudFlare account to update.        |
+| `'cloudflare.name'`    | no       | Override the record name. Default is the name of the container. |
