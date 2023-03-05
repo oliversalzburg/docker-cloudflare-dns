@@ -8,14 +8,16 @@ if (!CLOUDFLARE_API_KEY) {
   throw new Error("CLOUDFLARE_API_KEY is not set. Exiting.");
 }
 
+type FetchOptions = {
+  body?: string;
+  headers?: Record<string, string>;
+  method?: "DELETE" | "GET" | "PATCH" | "POST";
+};
+
 declare global {
   export const fetch: (
     url: string,
-    options?: {
-      body?: string;
-      headers?: Record<string, string>;
-      method?: "DELETE" | "GET" | "PATCH" | "POST";
-    }
+    options?: FetchOptions
   ) => Promise<{ json(): Promise<Record<string, unknown>> }>;
 }
 
@@ -62,8 +64,8 @@ type DnsRecord = {
   type: "A" | "AAAA" | "CNAME";
 };
 
-const getContainers = () => {
-  return new Promise<Array<ContainerMetadata>>((resolve, reject) => {
+const getContainers = () =>
+  new Promise<Array<ContainerMetadata>>((resolve, reject) => {
     const options = {
       socketPath: "/var/run/docker.sock",
       path: "/v1.26/containers/json",
@@ -86,7 +88,6 @@ const getContainers = () => {
     });
     clientRequest.end();
   });
-};
 
 const getContainerIpAddress = (container: ContainerMetadata) => {
   const networks = Object.entries(container.NetworkSettings.Networks);
@@ -102,17 +103,24 @@ const getContainerIpAddress = (container: ContainerMetadata) => {
   };
 };
 
+const cloudflareRequest = (url: string, options?: FetchOptions) => {
+  const defaultOptions = {
+    headers: {
+      Authorization: `Bearer ${CLOUDFLARE_API_KEY}`,
+    },
+  };
+  const fetchOptions = { ...options, ...defaultOptions };
+
+  return fetch(`${CLOUDFLARE_API_ENDPOINT}${url}`, fetchOptions);
+};
+
 let zonesCache: Array<ZoneInfo> | undefined;
 const getZones = async () => {
   if (zonesCache) {
     return zonesCache;
   }
 
-  const response = await fetch(`${CLOUDFLARE_API_ENDPOINT}/zones`, {
-    headers: {
-      Authorization: `Bearer ${CLOUDFLARE_API_KEY}`,
-    },
-  });
+  const response = await cloudflareRequest("/zones");
   const zones = await response.json();
   if (zones.success === false) {
     throw new Error((zones.errors as Array<CloudflareError>)[0].message);
@@ -127,11 +135,7 @@ const getZoneRecords = async (zoneIdentifier: string) => {
     return zoneRecordsCache.get(zoneIdentifier);
   }
 
-  const response = await fetch(`${CLOUDFLARE_API_ENDPOINT}/zones/${zoneIdentifier}/dns_records`, {
-    headers: {
-      Authorization: `Bearer ${CLOUDFLARE_API_KEY}`,
-    },
-  });
+  const response = await cloudflareRequest(`/zones/${zoneIdentifier}/dns_records`);
   const records = await response.json();
   if (records.success === false) {
     throw new Error((records.errors as Array<CloudflareError>)[0].message);
@@ -148,16 +152,13 @@ const createRecord = async (
   type: DnsRecord["type"],
   content: string
 ) => {
-  const response = await fetch(`${CLOUDFLARE_API_ENDPOINT}/zones/${zoneIdentifier}/dns_records`, {
+  const response = await cloudflareRequest(`/zones/${zoneIdentifier}/dns_records`, {
     body: JSON.stringify({
       type,
       name,
       content,
       ttl: 1,
     }),
-    headers: {
-      Authorization: `Bearer ${CLOUDFLARE_API_KEY}`,
-    },
     method: "POST",
   });
   const records = await response.json();
@@ -166,33 +167,21 @@ const createRecord = async (
   }
 };
 const deleteRecord = async (zoneIdentifier: string, identifier: string) => {
-  const response = await fetch(
-    `${CLOUDFLARE_API_ENDPOINT}/zones/${zoneIdentifier}/dns_records/${identifier}`,
-    {
-      headers: {
-        Authorization: `Bearer ${CLOUDFLARE_API_KEY}`,
-      },
-      method: "DELETE",
-    }
-  );
+  const response = await cloudflareRequest(`/zones/${zoneIdentifier}/dns_records/${identifier}`, {
+    method: "DELETE",
+  });
   const records = await response.json();
   if (records.success === false) {
     throw new Error((records.errors as Array<CloudflareError>)[0].message);
   }
 };
 const updateRecord = async (zoneIdentifier: string, identifier: string, content: string) => {
-  const response = await fetch(
-    `${CLOUDFLARE_API_ENDPOINT}/zones/${zoneIdentifier}/dns_records/${identifier}`,
-    {
-      body: JSON.stringify({
-        content,
-      }),
-      headers: {
-        Authorization: `Bearer ${CLOUDFLARE_API_KEY}`,
-      },
-      method: "PATCH",
-    }
-  );
+  const response = await cloudflareRequest(`/zones/${zoneIdentifier}/dns_records/${identifier}`, {
+    body: JSON.stringify({
+      content,
+    }),
+    method: "PATCH",
+  });
   const records = await response.json();
   if (records.success === false) {
     throw new Error((records.errors as Array<CloudflareError>)[0].message);
