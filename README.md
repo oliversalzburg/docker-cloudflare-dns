@@ -34,5 +34,8 @@ docker run --rm --name traefik \
     --label "cloudflare.enabled=true" \
     --label "cloudflare.name=ingress" \
     --label "cloudflare.zone=example.com" \
-    traefik:latest
+    traefik:latest \
+    --api.insecure=true \
+    --providers.docker=true \
+    --providers.docker.exposedByDefault=false
 ```
