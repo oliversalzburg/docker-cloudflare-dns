@@ -4,14 +4,16 @@ Updates CloudFlare DNS with IP addresses of running Docker containers.
 
 ## Usage
 
+`CLOUDFLARE_API_KEY` needs to have `Edit` permissions for all zones that you want to maintain.
+
 ```shell
 docker run --rm --name cloudflare-dns \
     --volume /var/run/docker.sock:/var/run/docker.sock:ro \
-    -e "CLOUDFLARE_API_KEY=<<your API key here>" \
+    -e "CLOUDFLARE_API_KEY=<your API key here>" \
     ghcr.io/oliversalzburg/docker-cloudflare-dns:main
 ```
 
-Output will guide you from there.
+Output will guide you from there, if anything is wrong.
 
 ### Labels
 
