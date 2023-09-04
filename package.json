@@ -9,7 +9,7 @@
   },
   "devDependencies": {
     "@types/eslint": "8",
-    "@types/node": "20.3.3",
+    "@types/node": "20.5.9",
     "@typescript-eslint/eslint-plugin": "6.5.0",
     "@typescript-eslint/parser": "6.5.0",
     "esbuild": "0.18.12",
