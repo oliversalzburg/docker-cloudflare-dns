@@ -318,10 +318,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:20.5.9":
-  version: 20.5.9
-  resolution: "@types/node@npm:20.5.9"
-  checksum: a071a19019b4045ba65cbacb3a24fcdf1ef41474fd15fb160a082a4c7aba7643b69c5d681637d2b0ce081f2127ce4332ea4d8bf007595efe8e82ba795872c7d0
+"@types/node@npm:20.8.0":
+  version: 20.8.0
+  resolution: "@types/node@npm:20.8.0"
+  checksum: 9ee3b9116bdb85bf519fe373f0faafdec048b6e3e34b1d97c20a3331f3d3ae0a87b08696805758447694869620d6359c81c18fdee30751a8fb4231bffa8f5482
   languageName: node
   linkType: hard
 
@@ -2151,7 +2151,7 @@ __metadata:
   resolution: "yarn3-typescript-nodejs-esbuild@workspace:."
   dependencies:
     "@types/eslint": 8
-    "@types/node": 20.5.9
+    "@types/node": 20.8.0
     "@typescript-eslint/eslint-plugin": 6.5.0
     "@typescript-eslint/parser": 6.7.3
     esbuild: 0.19.4
