@@ -371,21 +371,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:6.5.0":
-  version: 6.5.0
-  resolution: "@typescript-eslint/parser@npm:6.5.0"
+"@typescript-eslint/parser@npm:6.7.3":
+  version: 6.7.3
+  resolution: "@typescript-eslint/parser@npm:6.7.3"
   dependencies:
-    "@typescript-eslint/scope-manager": 6.5.0
-    "@typescript-eslint/types": 6.5.0
-    "@typescript-eslint/typescript-estree": 6.5.0
-    "@typescript-eslint/visitor-keys": 6.5.0
+    "@typescript-eslint/scope-manager": 6.7.3
+    "@typescript-eslint/types": 6.7.3
+    "@typescript-eslint/typescript-estree": 6.7.3
+    "@typescript-eslint/visitor-keys": 6.7.3
     debug: ^4.3.4
   peerDependencies:
     eslint: ^7.0.0 || ^8.0.0
   peerDependenciesMeta:
     typescript:
       optional: true
-  checksum: 0b725eed37303028dc92db18d1ce2310111b606c0a9ed84b4fdf13480d580b2e05e9faed7dc1784752f609080ce1463fd3a8858b8412cce2eddb017bee907f59
+  checksum: a2e7ae539cfcc556c48e54b4f1b00502f4ad437a0386b46bd99874de48d7b9c25973ad1de17dc41cbd4543734b0ed6817efce4551293bee64ff9b359c683d53a
   languageName: node
   linkType: hard
 
@@ -396,6 +396,16 @@ __metadata:
     "@typescript-eslint/types": 6.5.0
     "@typescript-eslint/visitor-keys": 6.5.0
   checksum: aaec7d7260eef0f36e09ab54050184223b24d5c10a915ef857af49658ec910c004dfe8c799866c0f49542b36d6218610d5dff97e642e8b3b0fb0de3c53ca1b8b
+  languageName: node
+  linkType: hard
+
+"@typescript-eslint/scope-manager@npm:6.7.3":
+  version: 6.7.3
+  resolution: "@typescript-eslint/scope-manager@npm:6.7.3"
+  dependencies:
+    "@typescript-eslint/types": 6.7.3
+    "@typescript-eslint/visitor-keys": 6.7.3
+  checksum: 0063be085818824a6975df672fbde70bec773efeec4be8e7cb56ffb3143d8df5e8c8095dbe8793dfc4e6e74987165b9efaf433039017e5970e972cbd98294f18
   languageName: node
   linkType: hard
 
@@ -423,6 +433,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@typescript-eslint/types@npm:6.7.3":
+  version: 6.7.3
+  resolution: "@typescript-eslint/types@npm:6.7.3"
+  checksum: f25389e20da03de34189f850b7e3af8c10d1a45d87387f1818b79cc42c835548ef223b67fe92c9139ac52bd05a69161ac38eb1a1c3a2c37d44d621ba52b0f03b
+  languageName: node
+  linkType: hard
+
 "@typescript-eslint/typescript-estree@npm:6.5.0":
   version: 6.5.0
   resolution: "@typescript-eslint/typescript-estree@npm:6.5.0"
@@ -438,6 +455,24 @@ __metadata:
     typescript:
       optional: true
   checksum: 6b5cff285a61ce1163efb257d2ba62c0c8cadff9ac3fde4cf5b4ac62ac14c76d33bf4e5b7ee920ebbfe92acaf79ed14fd9288585eedbc699083fa3a0dccd2e44
+  languageName: node
+  linkType: hard
+
+"@typescript-eslint/typescript-estree@npm:6.7.3":
+  version: 6.7.3
+  resolution: "@typescript-eslint/typescript-estree@npm:6.7.3"
+  dependencies:
+    "@typescript-eslint/types": 6.7.3
+    "@typescript-eslint/visitor-keys": 6.7.3
+    debug: ^4.3.4
+    globby: ^11.1.0
+    is-glob: ^4.0.3
+    semver: ^7.5.4
+    ts-api-utils: ^1.0.1
+  peerDependenciesMeta:
+    typescript:
+      optional: true
+  checksum: 9176acfcd1328bf3a82007e1b60e278f2c75d8e09eedc6f6f85f993bbb89d2bf4070cf59b660547ac4139f1b7449cb28f5215a59e720019f070cba9e9f6d997a
   languageName: node
   linkType: hard
 
@@ -465,6 +500,16 @@ __metadata:
     "@typescript-eslint/types": 6.5.0
     eslint-visitor-keys: ^3.4.1
   checksum: 1b7d06b933aa36a89957e89c38d8ec437df63df2ce1a76d5f5b0e293b62a758f30b44799458f189aa01c426e822a3c7ee884545e20af3a61716c94c782f84307
+  languageName: node
+  linkType: hard
+
+"@typescript-eslint/visitor-keys@npm:6.7.3":
+  version: 6.7.3
+  resolution: "@typescript-eslint/visitor-keys@npm:6.7.3"
+  dependencies:
+    "@typescript-eslint/types": 6.7.3
+    eslint-visitor-keys: ^3.4.1
+  checksum: 2e31cd0cd578ab5c36ea6f6c37055ee686ca7ef1bd47dc882d6383f77689d68c5c85750eda06c22fe3c8bac69ec12913446ba172cdc79610b60eb188d2aad3d3
   languageName: node
   linkType: hard
 
@@ -2108,7 +2153,7 @@ __metadata:
     "@types/eslint": 8
     "@types/node": 20.5.9
     "@typescript-eslint/eslint-plugin": 6.5.0
-    "@typescript-eslint/parser": 6.5.0
+    "@typescript-eslint/parser": 6.7.3
     esbuild: 0.19.4
     eslint: 8.48.0
     lint-staged: 14.0.1
