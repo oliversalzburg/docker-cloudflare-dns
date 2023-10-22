@@ -6,7 +6,7 @@ esbuild
     outfile: "./output/main.cjs",
     platform: "node",
     sourcemap: true,
-    target: "node18",
+    target: "node20",
     bundle: true,
   })
   .catch(console.error);
