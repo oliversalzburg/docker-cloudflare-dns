@@ -14,13 +14,6 @@ type FetchOptions = {
   method?: "DELETE" | "GET" | "PATCH" | "POST";
 };
 
-declare global {
-  export const fetch: (
-    url: string,
-    options?: FetchOptions
-  ) => Promise<{ json(): Promise<Record<string, unknown>> }>;
-}
-
 type NetworkMetadata = {
   NetworkID: string;
   EndpointID: string;
@@ -121,7 +114,11 @@ const getZones = async () => {
   }
 
   const response = await cloudflareRequest("/zones");
-  const zones = await response.json();
+  const zones = (await response.json()) as {
+    success?: boolean;
+    errors?: Array<CloudflareError>;
+    result?: Array<ZoneInfo>;
+  };
   if (zones.success === false) {
     throw new Error((zones.errors as Array<CloudflareError>)[0].message);
   }
@@ -136,7 +133,11 @@ const getZoneRecords = async (zoneIdentifier: string) => {
   }
 
   const response = await cloudflareRequest(`/zones/${zoneIdentifier}/dns_records`);
-  const records = await response.json();
+  const records = (await response.json()) as {
+    success?: boolean;
+    errors?: Array<CloudflareError>;
+    result?: Array<DnsRecord>;
+  };
   if (records.success === false) {
     throw new Error((records.errors as Array<CloudflareError>)[0].message);
   }
@@ -150,7 +151,7 @@ const createRecord = async (
   zoneIdentifier: string,
   name: string,
   type: DnsRecord["type"],
-  content: string
+  content: string,
 ) => {
   const response = await cloudflareRequest(`/zones/${zoneIdentifier}/dns_records`, {
     body: JSON.stringify({
@@ -161,7 +162,10 @@ const createRecord = async (
     }),
     method: "POST",
   });
-  const records = await response.json();
+  const records = (await response.json()) as {
+    success?: boolean;
+    errors?: Array<CloudflareError>;
+  };
   if (records.success === false) {
     throw new Error((records.errors as Array<CloudflareError>)[0].message);
   }
@@ -170,7 +174,10 @@ const deleteRecord = async (zoneIdentifier: string, identifier: string) => {
   const response = await cloudflareRequest(`/zones/${zoneIdentifier}/dns_records/${identifier}`, {
     method: "DELETE",
   });
-  const records = await response.json();
+  const records = (await response.json()) as {
+    success?: boolean;
+    errors?: Array<CloudflareError>;
+  };
   if (records.success === false) {
     throw new Error((records.errors as Array<CloudflareError>)[0].message);
   }
@@ -182,7 +189,10 @@ const updateRecord = async (zoneIdentifier: string, identifier: string, content:
     }),
     method: "PATCH",
   });
-  const records = await response.json();
+  const records = (await response.json()) as {
+    success?: boolean;
+    errors?: Array<CloudflareError>;
+  };
   if (records.success === false) {
     throw new Error((records.errors as Array<CloudflareError>)[0].message);
   }
@@ -206,7 +216,7 @@ const getContainerName = (container: ContainerMetadata) => {
 
   const name = container.Names[0].substring(1);
   console.info(
-    `[${name}]: Container specifies no 'cloudflare.name' label, using default name '${name}'.`
+    `[${name}]: Container specifies no 'cloudflare.name' label, using default name '${name}'.`,
   );
   return name;
 };
@@ -220,7 +230,7 @@ const main = async () => {
 
     if (!doesContainerUseCloudflareDns(container)) {
       console.debug(
-        `[${containerName}]: Container is not configured for Cloudflare DNS. Set label 'cloudflare.enabled' to 'true' to enable.`
+        `[${containerName}]: Container is not configured for Cloudflare DNS. Set label 'cloudflare.enabled' to 'true' to enable.`,
       );
       continue;
     }
@@ -228,7 +238,7 @@ const main = async () => {
     const zoneName = getContainerCloudflareZone(container);
     if (!zoneName) {
       console.error(
-        `[${containerName}]: Container specifies no zone. Set label 'cloudflare.zone' to specify it.`
+        `[${containerName}]: Container specifies no zone. Set label 'cloudflare.zone' to specify it.`,
       );
       continue;
     }
@@ -257,23 +267,23 @@ const main = async () => {
       if (existingV4) {
         if (existingV4.content === addresses.v4) {
           console.info(
-            `[${containerName}]: Container DNS entry '${containerName}.${zoneName}' → '${existingV4.content}' (A) is up-to-date.`
+            `[${containerName}]: Container DNS entry '${containerName}.${zoneName}' → '${existingV4.content}' (A) is up-to-date.`,
           );
         } else {
           console.warn(
-            `[${containerName}]: Container DNS entry '${containerName}.${zoneName}' → '${existingV4.content}' (A) will be changed to point to '${addresses.v4}'.`
+            `[${containerName}]: Container DNS entry '${containerName}.${zoneName}' → '${existingV4.content}' (A) will be changed to point to '${addresses.v4}'.`,
           );
           await updateRecord(zone.id, existingV4.id, addresses.v4);
         }
       } else {
         console.warn(
-          `[${containerName}]: Container DNS entry '${containerName}.${zoneName}' → '${addresses.v4}' (A) will be created.`
+          `[${containerName}]: Container DNS entry '${containerName}.${zoneName}' → '${addresses.v4}' (A) will be created.`,
         );
         await createRecord(zone.id, fqdn, "A", addresses.v4);
       }
     } else if (existingV4) {
       console.warn(
-        `[${containerName}]: Container DNS entry '${containerName}.${zoneName}' → '${existingV4.content}' (A) is no longer valid and will be removed!`
+        `[${containerName}]: Container DNS entry '${containerName}.${zoneName}' → '${existingV4.content}' (A) is no longer valid and will be removed!`,
       );
       await deleteRecord(zone.id, existingV4.id);
     }
@@ -282,23 +292,23 @@ const main = async () => {
       if (existingV6) {
         if (existingV6.content === addresses.v6) {
           console.info(
-            `[${containerName}]: Container DNS entry '${containerName}.${zoneName}' → '${existingV6.content}' (AAAA) is up-to-date.`
+            `[${containerName}]: Container DNS entry '${containerName}.${zoneName}' → '${existingV6.content}' (AAAA) is up-to-date.`,
           );
         } else {
           console.warn(
-            `[${containerName}]: Container DNS entry '${containerName}.${zoneName}' → '${existingV6.content}' (AAAA) will be changed to point to '${addresses.v6}'.`
+            `[${containerName}]: Container DNS entry '${containerName}.${zoneName}' → '${existingV6.content}' (AAAA) will be changed to point to '${addresses.v6}'.`,
           );
           await updateRecord(zone.id, existingV6.id, addresses.v6);
         }
       } else {
         console.warn(
-          `[${containerName}]: Container DNS entry '${containerName}.${zoneName}' → '${addresses.v6}' (AAAA) will be created.`
+          `[${containerName}]: Container DNS entry '${containerName}.${zoneName}' → '${addresses.v6}' (AAAA) will be created.`,
         );
         await createRecord(zone.id, fqdn, "AAAA", addresses.v6);
       }
     } else if (existingV6) {
       console.warn(
-        `[${containerName}]: Container DNS entry '${containerName}.${zoneName}' → '${existingV6.content}' (AAAA) is no longer valid and will be removed!`
+        `[${containerName}]: Container DNS entry '${containerName}.${zoneName}' → '${existingV6.content}' (AAAA) is no longer valid and will be removed!`,
       );
       await deleteRecord(zone.id, existingV6.id);
     }
