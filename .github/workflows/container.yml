@@ -11,7 +11,7 @@ on:
 
 concurrency:
   group: container
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 env:
   DEV_BUILD: ${{ github.ref_name == 'main' }}
