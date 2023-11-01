@@ -1,4 +1,4 @@
-FROM node:20-buster@sha256:4f32caeadd6d027f531b7420a27e694381824c9cf14a8abfe16771e6023ee8c0
+FROM node:20-buster@sha256:bc66c6d94ac2c0488fbff373b2a6cdff2f270bcec1eeaf468b3272d21ce5ac68
 
 LABEL org.opencontainers.image.description Update Cloudflare DNS with Docker container IP addresses.
 
