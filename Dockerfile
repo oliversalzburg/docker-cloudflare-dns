@@ -1,4 +1,4 @@
-FROM node:20.11.0-bookworm@sha256:9aa3de5470c99408fda002dc1f406e92a31daf0492eb33d857d8d9d252edcc52
+FROM node:20.11.0-bookworm@sha256:ffebb4405810c92d267a764b21975fb2d96772e41877248a37bf3abaa0d3b590
 
 LABEL org.opencontainers.image.description Update Cloudflare DNS with Docker container IP addresses.
 
