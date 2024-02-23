@@ -10,7 +10,7 @@
   },
   "devDependencies": {
     "@types/eslint": "8.56.3",
-    "@types/node": "20.11.19",
+    "@types/node": "20.11.20",
     "@typescript-eslint/eslint-plugin": "7.0.2",
     "@typescript-eslint/parser": "7.0.2",
     "esbuild": "0.20.1",
