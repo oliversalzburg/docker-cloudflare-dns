@@ -131,7 +131,6 @@ jobs:
           add-cpes-if-none: true
           fail-build: false
           image: ${{ env.REGISTRY }}/${{ github.repository }}:${{ env.RELEASE_VERSION }}
-          only-fixed: true
           severity-cutoff: critical
 
       - name: Store SARIF report
