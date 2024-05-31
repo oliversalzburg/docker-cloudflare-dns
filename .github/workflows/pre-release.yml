@@ -8,6 +8,7 @@ on:
 concurrency: pre-release
 
 env:
+  DEV_BUILD: true
   # renovate: datasource=docker depName=node versioning=node
   NODE_VERSION: "20.14.0"
   REGISTRY: ghcr.io
@@ -58,7 +59,7 @@ jobs:
         run: yarn build
 
       - name: Determine release version
-        run: echo "RELEASE_VERSION=$(node .scripts/manifest-version.cjs --canary=patch)" >> $GITHUB_ENV
+        run: echo "RELEASE_VERSION=$(node .scripts/release-version.cjs)" >> $GITHUB_ENV
 
       - name: Extract metadata
         id: meta
