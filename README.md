@@ -39,3 +39,9 @@ docker run --rm --name traefik \
     --providers.docker=true \
     --providers.docker.exposedByDefault=false
 ```
+
+## Release Process
+
+```
+npm version patch --message "chore: Version bump %s"
+```
