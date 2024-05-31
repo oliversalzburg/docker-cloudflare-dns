@@ -10,7 +10,7 @@ on:
 
 env:
   # renovate: datasource=docker depName=node versioning=node
-  NODE_VERSION: "20.13.1"
+  NODE_VERSION: "20.14.0"
 
 jobs:
   qa:
