@@ -14,8 +14,11 @@
   },
   "scripts": {
     "build": "node build.cjs",
+    "lint": "yarn run lint:all",
+    "lint:all": "yarn run lint:eslint && yarn run lint:tsc",
     "lint:eslint": "eslint source",
-    "lint:tsc": "tsc --noEmit"
+    "lint:tsc": "tsc --noEmit",
+    "test": "echo This project has no tests."
   },
   "devDependencies": {
     "@types/eslint": "8.56.10",
