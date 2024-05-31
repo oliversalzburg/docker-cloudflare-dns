@@ -10,6 +10,7 @@ concurrency: pre-release
 env:
   # renovate: datasource=docker depName=node versioning=node
   NODE_VERSION: "20.14.0"
+  REGISTRY: ghcr.io
 
 jobs:
   qa-main:
