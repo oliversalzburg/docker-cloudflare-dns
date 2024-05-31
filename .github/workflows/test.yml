@@ -18,6 +18,9 @@ jobs:
     name: Run QA
     # We don't need to run this on Renovate PRs. We will already test the `renovate/foo` branch.
     if: github.event_name != 'pull_request' || github.actor != 'renovate[bot]'
+    permissions:
+      contents: read
+      packages: read
     runs-on: ubuntu-22.04
 
     steps:
