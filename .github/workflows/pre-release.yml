@@ -114,7 +114,6 @@ jobs:
           upload-release-assets: false
 
       - name: Grype scan
-        if: ${{ inputs.push }}
         uses: anchore/scan-action@3343887d815d7b07465f6fdcd395bd66508d486a # v3
         id: scan
         with:
@@ -125,21 +124,18 @@ jobs:
           severity-cutoff: critical
 
       - name: Store SARIF report
-        if: ${{ inputs.push }}
         uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4
         with:
           name: ${{ env.RELEASE_VERSION }}.sarif.json
           path: ${{ steps.scan.outputs.sarif }}
 
       - name: Upload scan report
-        if: ${{ inputs.push }}
         uses: github/codeql-action/upload-sarif@f079b8493333aace61c81488f8bd40919487bd9f # v3
         with:
           sarif_file: ${{ steps.scan.outputs.sarif }}
 
       - name: Upload SBOM attestation
         uses: actions/attest-sbom@aaa2d0a82e0853a3aea99fcf632b9b61cdb534c2 # v1
-        if: ${{ inputs.attest && inputs.push }}
         id: attest
         with:
           subject-name: ${{ env.REGISTRY }}/${{ github.repository }}
