@@ -11,6 +11,7 @@ on:
 env:
   # renovate: datasource=docker depName=node versioning=node
   NODE_VERSION: "20.14.0"
+  REGISTRY: ghcr.io
 
 jobs:
   qa:
@@ -59,7 +60,6 @@ jobs:
           SOURCE_DATE_EPOCH: 0
         with:
           cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ github.repository }}/cache
-          cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ github.repository }}/cache,mode=max
           context: .
           platforms: linux/amd64
           # Pushes a provenance attestation to the registry, which can currently confuse
