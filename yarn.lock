@@ -289,6 +289,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@oliversalzburg/docker-cloudflare-dns@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "@oliversalzburg/docker-cloudflare-dns@workspace:."
+  dependencies:
+    "@types/eslint": "npm:8.56.10"
+    "@types/node": "npm:20.12.13"
+    "@typescript-eslint/eslint-plugin": "npm:7.11.0"
+    "@typescript-eslint/parser": "npm:7.11.0"
+    esbuild: "npm:0.21.4"
+    eslint: "npm:8.57.0"
+    lint-staged: "npm:15.2.5"
+    prettier: "npm:3.2.5"
+    prettier-package-json: "npm:2.8.0"
+    prettier-plugin-organize-imports: "npm:3.2.4"
+    typescript: "npm:5.4.5"
+  languageName: unknown
+  linkType: soft
+
 "@types/eslint@npm:8.56.10":
   version: 8.56.10
   resolution: "@types/eslint@npm:8.56.10"
@@ -2110,24 +2128,6 @@ __metadata:
   checksum: 10c0/280ddb2e43ffa7d91a95738e80c8f33e860749cdc25aa6d9e4d350a28e174fd7e494e4aa023108aaee41388e451e3dc1292261d8f022aabcf90df9c63d647549
   languageName: node
   linkType: hard
-
-"yarn3-typescript-nodejs-esbuild@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "yarn3-typescript-nodejs-esbuild@workspace:."
-  dependencies:
-    "@types/eslint": "npm:8.56.10"
-    "@types/node": "npm:20.12.13"
-    "@typescript-eslint/eslint-plugin": "npm:7.11.0"
-    "@typescript-eslint/parser": "npm:7.11.0"
-    esbuild: "npm:0.21.4"
-    eslint: "npm:8.57.0"
-    lint-staged: "npm:15.2.5"
-    prettier: "npm:3.2.5"
-    prettier-package-json: "npm:2.8.0"
-    prettier-plugin-organize-imports: "npm:3.2.4"
-    typescript: "npm:5.4.5"
-  languageName: unknown
-  linkType: soft
 
 "yocto-queue@npm:^0.1.0":
   version: 0.1.0

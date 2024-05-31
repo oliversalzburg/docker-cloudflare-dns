@@ -3,11 +3,21 @@ name: QA
 on:
   pull_request:
   push:
+    branches:
+      - "**" # matches every branch
+      - "!main" # excludes main
+  workflow_call:
+
+env:
+  # renovate: datasource=docker depName=node versioning=node
+  NODE_VERSION: "20.13.1"
 
 jobs:
   qa:
     name: Run QA
-    runs-on: ubuntu-latest
+    # We don't need to run this on Renovate PRs. We will already test the `renovate/foo` branch.
+    if: github.event_name != 'pull_request' || github.actor != 'renovate[bot]'
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout
@@ -16,14 +26,25 @@ jobs:
       - name: Select NodeJS version
         uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4
         with:
-          node-version: lts/*
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Load cached dependencies
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
+        with:
+          path: .yarn/cache
+          key: ${{ runner.os }}-node${{ env.NODE_VERSION }}-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node${{ env.NODE_VERSION }}
 
       - name: Install dependencies
         run: yarn install
 
-      - name: Lint ESLint
-        run: yarn lint:eslint
-      - name: Lint TSC
-        run: yarn lint:tsc
+      - name: Lint
+        run: yarn lint
       - name: Build
         run: yarn build
+      - name: Test
+        run: yarn test
