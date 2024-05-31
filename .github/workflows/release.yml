@@ -16,7 +16,7 @@ env:
 jobs:
   qa-tag:
     name: Call QA
-    uses: ./.github/workflows/test.yml
+    uses: ./.github/workflows/qa.yml
 
   release:
     concurrency: publish
