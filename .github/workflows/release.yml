@@ -2,7 +2,7 @@ name: Test/Release
 
 on:
   push:
-    branches:
+    tags:
       - "v*"
 
 concurrency: release
