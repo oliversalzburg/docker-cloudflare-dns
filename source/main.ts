@@ -216,7 +216,7 @@ const getContainerName = (container: ContainerMetadata) => {
   }
 
   const name = container.Names[0].substring(1);
-  console.info(
+  process.stderr.write(
     `[${name}]: Container specifies no 'cloudflare.name' label, using default name '${name}'.`,
   );
   return name;
@@ -230,7 +230,7 @@ const main = async () => {
     const containerName = getContainerName(container);
 
     if (!doesContainerUseCloudflareDns(container)) {
-      console.debug(
+      process.stderr.write(
         `[${containerName}]: Container is not configured for Cloudflare DNS. Set label 'cloudflare.enabled' to 'true' to enable.`,
       );
       continue;
@@ -238,14 +238,14 @@ const main = async () => {
 
     const zoneName = getContainerCloudflareZone(container);
     if (!zoneName) {
-      console.error(
+      process.stderr.write(
         `[${containerName}]: Container specifies no zone. Set label 'cloudflare.zone' to specify it.`,
       );
       continue;
     }
     const zone = zones.find(subject => subject.name === zoneName);
     if (!zone) {
-      console.error(`[${containerName}]: Container specifies invalid zone '${zoneName}'.`);
+      process.stderr.write(`[${containerName}]: Container specifies invalid zone '${zoneName}'.`);
       continue;
     }
 
@@ -256,7 +256,7 @@ const main = async () => {
     let existingV6;
 
     if (!existingRecords || existingRecords.length < 1) {
-      console.info(`[${containerName}]: No records for container exist yet.`);
+      process.stderr.write(`[${containerName}]: No records for container exist yet.`);
     } else {
       existingV4 = existingRecords.find(record => record.type === "A");
       existingV6 = existingRecords.find(record => record.type === "AAAA");
@@ -267,23 +267,23 @@ const main = async () => {
     if (addresses?.v4) {
       if (existingV4) {
         if (existingV4.content === addresses.v4) {
-          console.info(
+          process.stderr.write(
             `[${containerName}]: Container DNS entry '${containerName}.${zoneName}' → '${existingV4.content}' (A) is up-to-date.`,
           );
         } else {
-          console.warn(
+          process.stderr.write(
             `[${containerName}]: Container DNS entry '${containerName}.${zoneName}' → '${existingV4.content}' (A) will be changed to point to '${addresses.v4}'.`,
           );
           await updateRecord(zone.id, existingV4.id, addresses.v4);
         }
       } else {
-        console.warn(
+        process.stderr.write(
           `[${containerName}]: Container DNS entry '${containerName}.${zoneName}' → '${addresses.v4}' (A) will be created.`,
         );
         await createRecord(zone.id, fqdn, "A", addresses.v4);
       }
     } else if (existingV4) {
-      console.warn(
+      process.stderr.write(
         `[${containerName}]: Container DNS entry '${containerName}.${zoneName}' → '${existingV4.content}' (A) is no longer valid and will be removed!`,
       );
       await deleteRecord(zone.id, existingV4.id);
@@ -292,30 +292,30 @@ const main = async () => {
     if (addresses?.v6) {
       if (existingV6) {
         if (existingV6.content === addresses.v6) {
-          console.info(
+          process.stderr.write(
             `[${containerName}]: Container DNS entry '${containerName}.${zoneName}' → '${existingV6.content}' (AAAA) is up-to-date.`,
           );
         } else {
-          console.warn(
+          process.stderr.write(
             `[${containerName}]: Container DNS entry '${containerName}.${zoneName}' → '${existingV6.content}' (AAAA) will be changed to point to '${addresses.v6}'.`,
           );
           await updateRecord(zone.id, existingV6.id, addresses.v6);
         }
       } else {
-        console.warn(
+        process.stderr.write(
           `[${containerName}]: Container DNS entry '${containerName}.${zoneName}' → '${addresses.v6}' (AAAA) will be created.`,
         );
         await createRecord(zone.id, fqdn, "AAAA", addresses.v6);
       }
     } else if (existingV6) {
-      console.warn(
+      process.stderr.write(
         `[${containerName}]: Container DNS entry '${containerName}.${zoneName}' → '${existingV6.content}' (AAAA) is no longer valid and will be removed!`,
       );
       await deleteRecord(zone.id, existingV6.id);
     }
   }
 
-  console.info("Operation completed.");
+  process.stderr.write("Operation completed.");
 };
 
 main().catch(redirectErrorsToConsole(console));
