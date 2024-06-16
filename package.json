@@ -13,6 +13,7 @@
   "bugs": {
     "url": "https://github.com/oliversalzburg/docker-cloudflare-dns/issues"
   },
+  "type": "module",
   "scripts": {
     "build": "node build.cjs",
     "lint": "yarn run lint:all",
@@ -23,18 +24,22 @@
     "preversion": "yarn run lint && yarn run build && yarn run test",
     "postversion": "git push"
   },
+  "dependencies": {
+    "@oliversalzburg/js-utils": "0.0.46"
+  },
   "devDependencies": {
-    "@types/eslint": "8.56.10",
-    "@types/node": "20.14.2",
-    "@typescript-eslint/eslint-plugin": "7.13.0",
-    "@typescript-eslint/parser": "7.13.0",
-    "esbuild": "0.21.5",
-    "eslint": "8.57.0",
-    "lint-staged": "15.2.7",
-    "prettier": "3.3.2",
+    "@eslint/js": "9.5.0",
+    "@types/node": "20.12.13",
+    "esbuild": "0.21.4",
+    "eslint": "9.4.0",
+    "eslint-config-prettier": "9.1.0",
+    "lint-staged": "15.2.5",
+    "prettier": "3.2.5",
     "prettier-package-json": "2.8.0",
     "prettier-plugin-organize-imports": "3.2.4",
-    "typescript": "5.4.5"
+    "prettier-plugin-sh": "0.14.0",
+    "typescript": "5.4.5",
+    "typescript-eslint": "8.0.0-alpha.30"
   },
   "packageManager": "yarn@4.3.0"
 }

@@ -1,3 +1,4 @@
+import { redirectErrorsToConsole } from "@oliversalzburg/js-utils";
 import http from "node:http";
 
 const CLOUDFLARE_API_ENDPOINT = "https://api.cloudflare.com/client/v4";
@@ -69,7 +70,7 @@ const getContainers = () =>
       response.setEncoding("utf8");
       let rawData = "";
       response.on("data", chunk => {
-        rawData += chunk;
+        rawData += String(chunk);
       });
       response.on("end", () => {
         const parsedData = JSON.parse(rawData) as Array<ContainerMetadata>;
@@ -317,4 +318,4 @@ const main = async () => {
   console.info("Operation completed.");
 };
 
-main().catch(console.error);
+main().catch(redirectErrorsToConsole(console));
