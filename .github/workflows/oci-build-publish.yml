@@ -142,7 +142,7 @@ jobs:
           sarif_file: ${{ steps.scan.outputs.sarif }}
 
       - name: Upload SBOM attestation
-        uses: actions/attest-sbom@91d05efbc376a456f8abf965e8929c5c04ece8af # v1
+        uses: actions/attest-sbom@3d6693daad97553949201f0913efcba833e58d67 # v1
         if: ${{ inputs.attest && inputs.push }}
         id: attest
         with:
