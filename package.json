@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@eslint/js": "9.5.0",
-    "@oliversalzburg/eslint-config": "0.0.10",
+    "@oliversalzburg/eslint-config": "0.0.11",
     "@types/node": "20.14.5",
     "esbuild": "0.21.5",
     "eslint": "9.5.0",
