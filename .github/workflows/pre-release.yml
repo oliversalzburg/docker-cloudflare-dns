@@ -21,53 +21,6 @@ env:
   REGISTRY: ghcr.io
 
 jobs:
-  qa:
-    name: 🔹 QA
-    uses: oliversalzburg/workflows/.github/workflows/qa-browser-app.yml@main
-    with:
-      is-oci-target: true
-
-  build:
-    name: Build application
-    needs: qa
-    permissions:
-      contents: write
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
-
-      - name: Select NodeJS version
-        uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          registry-url: https://registry.npmjs.org
-
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: Install dependencies
-        run: yarn install
-
-      - name: Load cached dependencies
-        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
-        with:
-          path: .yarn/cache
-          key: ${{ runner.os }}-node${{ env.NODE_VERSION }}-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-node${{ env.NODE_VERSION }}
-
-      - name: Build
-        run: yarn build
-
-      - uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4
-        with:
-          name: build-output
-          path: |
-            output/
-            package.json
-          retention-days: 1
-
   versions:
     name: Versions
     outputs:
@@ -88,20 +41,64 @@ jobs:
       - name: Determine versions
         run: echo "RELEASE_VERSION=$(node .scripts/release-version.cjs)" >> $GITHUB_ENV
 
+  qa:
+    name: 🔹 QA
+    uses: oliversalzburg/workflows/.github/workflows/qa-npm-package.yml@main
+    with:
+      is-oci-target: true
+
+  build:
+    name: Build application
+    permissions:
+      contents: read
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+
+      - name: Select NodeJS version
+        uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Load cached dependencies
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
+        with:
+          path: .yarn/cache
+          key: ${{ runner.os }}-node${{ env.NODE_VERSION }}-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node${{ env.NODE_VERSION }}
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build
+        run: yarn build
+
+      - uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4
+        with:
+          name: build-output
+          path: |
+            output/
+            package.json
+          retention-days: 1
+
   pre-release:
-    concurrency: publish
     name: 🔹 Publish
     needs:
-      - build
       - qa
+      - build
       - versions
     permissions:
-      attestations: write
       contents: read
       id-token: write
-      packages: write
-      security-events: write
-    uses: ./.github/workflows/oci-build-publish.yml
+      packages: read
+      pages: write
+      pull-requests: read
+    uses: oliversalzburg/workflows/.github/workflows/publish-oci.yml@main
     with:
       artifact: build-output
       context: .
