@@ -4,69 +4,12 @@ on:
   pull_request:
   push:
     branches:
-      - "**" # matches every branch
-      - "!main" # excludes main
-  workflow_call:
-
-env:
-  # renovate: datasource=docker depName=node versioning=node
-  NODE_VERSION: "20.14.0"
-  REGISTRY: ghcr.io
+      - "**"
+      - "!main"
 
 jobs:
   qa:
-    name: Run QA
-    # We don't need to run this on Renovate PRs. We will already test the `renovate/foo` branch.
-    if: github.event_name != 'pull_request' || github.actor != 'renovate[bot]'
-    permissions:
-      contents: read
-      packages: read
-    runs-on: ubuntu-22.04
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
-
-      - name: Select NodeJS version
-        uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: Load cached dependencies
-        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
-        with:
-          path: .yarn/cache
-          key: ${{ runner.os }}-node${{ env.NODE_VERSION }}-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-node${{ env.NODE_VERSION }}
-
-      - name: Install dependencies
-        run: yarn install
-
-      - name: Lint
-        run: yarn lint
-      - name: Build
-        run: yarn build
-      - name: Test
-        run: yarn test
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@d70bba72b1f3fd22344832f00baa16ece964efeb # v3
-
-      - name: Build
-        uses: docker/build-push-action@c382f710d39a5bb4e430307530a720f50c2d3318 # v6
-        id: build
-        env:
-          SOURCE_DATE_EPOCH: 0
-        with:
-          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ github.repository }}/cache
-          context: .
-          platforms: linux/amd64
-          # Pushes a provenance attestation to the registry, which can currently confuse
-          # some clients. We skip this process for the time being, and instead attest
-          # our SBOM manually later.
-          provenance: false
-          push: false
+    name: 🔹 QA
+    uses: oliversalzburg/workflows/.github/workflows/qa-browser-app.yml@main
+    with:
+      is-oci-target: true

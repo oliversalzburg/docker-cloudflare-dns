@@ -14,14 +14,16 @@ env:
   REGISTRY: ghcr.io
 
 jobs:
-  qa-tag:
-    name: Call QA
-    uses: ./.github/workflows/qa.yml
+  qa:
+    name: 🔹 QA
+    uses: oliversalzburg/workflows/.github/workflows/qa-npm-package.yml@main
+    with:
+      is-oci-target: true
 
   release:
     concurrency: publish
     name: Publish
-    needs: qa-tag
+    needs: qa
     permissions:
       attestations: write
       contents: write

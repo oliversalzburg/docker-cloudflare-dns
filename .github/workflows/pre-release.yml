@@ -3,7 +3,14 @@ name: Pre-Release
 on:
   push:
     branches:
-      - "main"
+      - main
+  workflow_dispatch:
+    inputs:
+      wants-github-release:
+        default: false
+        description: Create a GitHub release?
+        required: false
+        type: boolean
 
 concurrency: pre-release
 
@@ -16,7 +23,9 @@ env:
 jobs:
   qa:
     name: 🔹 QA
-    uses: ./.github/workflows/qa.yml
+    uses: oliversalzburg/workflows/.github/workflows/qa-browser-app.yml@main
+    with:
+      is-oci-target: true
 
   build:
     name: Build application
