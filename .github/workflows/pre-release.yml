@@ -93,11 +93,13 @@ jobs:
       - build
       - versions
     permissions:
+      attestations: write
       contents: read
       id-token: write
-      packages: read
+      packages: write
       pages: write
       pull-requests: read
+      security-events: write
     uses: oliversalzburg/workflows/.github/workflows/publish-oci.yml@main
     with:
       artifact: build-output
