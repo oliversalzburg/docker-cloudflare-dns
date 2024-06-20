@@ -43,9 +43,7 @@ jobs:
 
   qa:
     name: 🔹 QA
-    uses: oliversalzburg/workflows/.github/workflows/qa-npm-package.yml@main
-    with:
-      is-oci-target: true
+    uses: oliversalzburg/workflows/.github/workflows/qa-nodejs-oci.yml@main
 
   build:
     name: Build application
