@@ -1,4 +1,4 @@
-name: Test/Release
+name: Release
 
 on:
   push:
@@ -14,24 +14,13 @@ env:
   REGISTRY: ghcr.io
 
 jobs:
-  qa:
-    name: 🔹 QA
-    uses: oliversalzburg/workflows/.github/workflows/qa-npm-package.yml@main
-    with:
-      is-oci-target: true
-
-  release:
-    concurrency: publish
-    name: Publish
-    needs: qa
+  versions:
+    name: Versions
+    outputs:
+      RELEASE_VERSION: ${{ env.RELEASE_VERSION }}
     permissions:
-      attestations: write
-      contents: write
-      id-token: write
-      packages: write
-      security-events: write
+      contents: read
     runs-on: ubuntu-22.04
-
     steps:
       - name: Checkout
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
@@ -42,116 +31,37 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           registry-url: https://registry.npmjs.org
 
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: Install dependencies
-        run: yarn install
-
-      - name: Load cached dependencies
-        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
-        with:
-          path: .yarn/cache
-          key: ${{ runner.os }}-node${{ env.NODE_VERSION }}-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-node${{ env.NODE_VERSION }}
-
-      - name: Build
-        run: yarn build
-
-      - name: Determine release version
+      - name: Determine versions
         run: echo "RELEASE_VERSION=$(node .scripts/release-version.cjs)" >> $GITHUB_ENV
 
-      - name: Extract metadata
-        id: meta
-        uses: docker/metadata-action@8e5442c4ef9f78752691e2d8f8d19755c6f78e81 # v5.5.1
-        with:
-          images: ${{ env.REGISTRY }}/${{ github.repository }}
-          labels: |
-            org.opencontainers.image.description=Updates CloudFlare DNS with IP addresses of running Docker containers.
-            org.opencontainers.image.revision=${{ github.sha }}
-            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
-            org.opencontainers.image.title=Docker CloudFlare DNS
-            org.opencontainers.image.version=${{ env.RELEASE_VERSION }}
-          tags: |
-            type=raw,value=${{ env.RELEASE_VERSION }}
-            type=raw,value=main
-            type=raw,value=latest
+  qa:
+    name: 🔹 QA
+    uses: oliversalzburg/workflows/.github/workflows/qa-nodejs-oci.yml@main
+    with:
+      artifact-contents: |
+        output/
+        package.json
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@d70bba72b1f3fd22344832f00baa16ece964efeb # v3
-
-      - name: Log in to the registry
-        uses: docker/login-action@0d4c9c5ea7693da7b068278f7b52bda2a190a446 # v3
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build + Push
-        uses: docker/build-push-action@c382f710d39a5bb4e430307530a720f50c2d3318 # v6
-        id: build
-        env:
-          SOURCE_DATE_EPOCH: 0
-        with:
-          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ github.repository }}/cache
-          cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ github.repository }}/cache,mode=max
-          context: .
-          labels: ${{ steps.meta.outputs.labels }}
-          platforms: linux/amd64
-          # Pushes a provenance attestation to the registry, which can currently confuse
-          # some clients. We skip this process for the time being, and instead attest
-          # our SBOM manually later.
-          provenance: false
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-
-      - name: Generate SBOM
-        uses: anchore/sbom-action@e8d2a6937ecead383dfe75190d104edd1f9c5751 # v0
-        with:
-          artifact-name: ${{ env.RELEASE_VERSION }}.sbom.spdx.json
-          format: spdx-json
-          image: ${{ env.REGISTRY }}/${{ github.repository }}:${{ env.RELEASE_VERSION }}
-          output-file: ${{ env.RELEASE_VERSION }}.sbom.spdx.json
-          upload-artifact: true
-          upload-release-assets: false
-
-      - name: Generate GitHub release
-        uses: oliversalzburg/action-automatic-semantic-releases@bc429dc1af8c036b5f8c11fef7bcb0becfd5064d # v0.0.13
-        with:
-          body_prefix: |
-            Published at <https://${{ env.REGISTRY }}/${{ github.repository }}:${{ env.RELEASE_VERSION }}>.
-          draft: false
-          files: ${{ env.RELEASE_VERSION }}.sbom.spdx.json
-          prerelease: false
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          title: v${{ env.RELEASE_VERSION }}
-
-      - name: Grype scan
-        uses: anchore/scan-action@3343887d815d7b07465f6fdcd395bd66508d486a # v3
-        id: scan
-        with:
-          add-cpes-if-none: true
-          fail-build: false
-          image: ${{ env.REGISTRY }}/${{ github.repository }}:${{ env.RELEASE_VERSION }}
-          severity-cutoff: critical
-
-      - name: Store SARIF report
-        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4
-        with:
-          name: ${{ env.RELEASE_VERSION }}.sarif.json
-          path: ${{ steps.scan.outputs.sarif }}
-
-      - name: Upload scan report
-        uses: github/codeql-action/upload-sarif@23acc5c183826b7a8a97bce3cecc52db901f8251 # v3
-        with:
-          sarif_file: ${{ steps.scan.outputs.sarif }}
-
-      - name: Upload SBOM attestation
-        uses: actions/attest-sbom@3d6693daad97553949201f0913efcba833e58d67 # v1
-        id: attest
-        with:
-          subject-name: ${{ env.REGISTRY }}/${{ github.repository }}
-          subject-digest: ${{ steps.build.outputs.digest }}
-          sbom-path: ${{ env.RELEASE_VERSION }}.sbom.spdx.json
-          push-to-registry: true
+  release:
+    name: 🔹 Publish
+    needs:
+      - qa
+      - versions
+    permissions:
+      attestations: write
+      contents: read
+      id-token: write
+      packages: write
+      pages: write
+      pull-requests: read
+      security-events: write
+    uses: oliversalzburg/workflows/.github/workflows/publish-oci.yml@main
+    with:
+      artifact: build-output
+      context: .
+      image_description: Updates CloudFlare DNS with IP addresses of running Docker containers.
+      image_name: ${{ github.repository }}
+      image_tag: ${{ needs.versions.outputs.RELEASE_VERSION }}
+      image_title: docker-cloudflare-dns
+      is_latest: true
+      push: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
