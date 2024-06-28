@@ -25,7 +25,7 @@
     "postversion": "git push"
   },
   "dependencies": {
-    "@oliversalzburg/js-utils": "0.0.50"
+    "@oliversalzburg/js-utils": "0.0.57"
   },
   "devDependencies": {
     "@eslint/js": "9.5.0",
