@@ -1,4 +1,4 @@
-import { redirectErrorsToConsole } from "@oliversalzburg/js-utils";
+import { redirectErrorsToConsole } from "@oliversalzburg/js-utils/errors/console.js";
 import http from "node:http";
 
 const CLOUDFLARE_API_ENDPOINT = "https://api.cloudflare.com/client/v4";
