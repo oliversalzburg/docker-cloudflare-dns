@@ -72,3 +72,4 @@ jobs:
       image_title: docker-cloudflare-dns
       is_latest: false
       push: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
+      registry: ${{ env.REGISTRY }}
