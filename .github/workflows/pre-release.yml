@@ -64,7 +64,7 @@ jobs:
       security-events: write
     uses: oliversalzburg/workflows/.github/workflows/publish-oci.yml@main
     with:
-      artifact: build-output
+      artifact-name: build-output
       context: .
       image_description: Updates CloudFlare DNS with IP addresses of running Docker containers.
       image_name: ${{ github.repository }}
