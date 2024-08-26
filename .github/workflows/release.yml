@@ -11,7 +11,6 @@ env:
   DEV_BUILD: false
   # renovate: datasource=docker depName=node versioning=node
   NODE_VERSION: "20.17.0"
-  REGISTRY: ghcr.io
 
 jobs:
   versions:
