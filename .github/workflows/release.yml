@@ -58,9 +58,9 @@ jobs:
     with:
       artifact: build-output
       context: .
-      image_description: Updates CloudFlare DNS with IP addresses of running Docker containers.
-      image_name: ${{ github.repository }}
-      image_tag: ${{ needs.versions.outputs.RELEASE_VERSION }}
-      image_title: docker-cloudflare-dns
-      is_latest: true
+      image-description: Updates CloudFlare DNS with IP addresses of running Docker containers.
+      image-name: ${{ github.repository }}
+      image-tag: ${{ needs.versions.outputs.RELEASE_VERSION }}
+      image-title: docker-cloudflare-dns
+      is-latest: true
       push: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
