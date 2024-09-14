@@ -67,7 +67,9 @@ jobs:
       context: .
       image-description: Updates CloudFlare DNS with IP addresses of running Docker containers.
       image-name: ${{ github.repository }}
-      image-tag: ${{ needs.versions.outputs.RELEASE_VERSION }}
+      image-tag: v${{ needs.versions.outputs.RELEASE_VERSION }}
       image-title: docker-cloudflare-dns
       is-latest: false
       push: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
+      with-sarif: true
+      with-sbom: true
