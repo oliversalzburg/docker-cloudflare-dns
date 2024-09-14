@@ -64,5 +64,3 @@ jobs:
       image-title: docker-cloudflare-dns
       is-latest: true
       push: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
-      with-sarif: true
-      with-sbom: true
