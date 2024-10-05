@@ -10,7 +10,7 @@ concurrency: release
 env:
   DEV_BUILD: false
   # renovate: datasource=docker depName=node versioning=node
-  NODE_VERSION: "20.17.0"
+  NODE_VERSION: "20.18.0"
 
 jobs:
   versions:
