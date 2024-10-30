@@ -17,7 +17,7 @@ concurrency: pre-release
 env:
   DEV_BUILD: true
   # renovate: datasource=docker depName=node versioning=node
-  NODE_VERSION: "22.10.0"
+  NODE_VERSION: "22.11.0"
 
 jobs:
   versions:
