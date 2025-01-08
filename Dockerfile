@@ -1,4 +1,4 @@
-FROM node:22.12.0@sha256:35a5dd72bcac4bce43266408b58a02be6ff0b6098ffa6f5435aeea980a8951d7
+FROM node:22.13.0@sha256:40500dee24186ae165e667b219de8a1757c00f2cdecf7ea552fc1cd1b66a842b
 
 LABEL "org.opencontainers.image.description"="Update Cloudflare DNS with Docker container IP addresses."
 
