@@ -1,5 +1,8 @@
 # docker-cloudflare-dns
 
+> [!CAUTION]
+> This project probably still works, but I no longer have any use for it myself, and I will not continue to maintain it. Thus, it has been **archived as of 2025-01-14**.
+
 Updates CloudFlare DNS with IP addresses of running Docker containers.
 
 ## Usage
@@ -10,7 +13,7 @@ Updates CloudFlare DNS with IP addresses of running Docker containers.
 docker run --rm --name cloudflare-dns \
     --volume /var/run/docker.sock:/var/run/docker.sock:ro \
     --env "CLOUDFLARE_API_KEY=<your API key here>" \
-    ghcr.io/oliversalzburg/docker-cloudflare-dns:v0.0.6
+    ghcr.io/oliversalzburg/docker-cloudflare-dns:v1.0.0
 ```
 
 Output will guide you from there, if anything is wrong.
